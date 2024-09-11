@@ -214,12 +214,10 @@ $('#calcbody').on('focusout', 'td.note input', function(event) {
     mutate_subnet_map('note', this.dataset.subnet, '', this.value)
 })
 
-
 function renderTable(operatingMode) {
-    // TODO: Validation Code
     $('#calcbody').empty();
-    let maxDepth = get_dict_max_depth(subnetMap, 0)
-    addRowTree(subnetMap, 0, maxDepth, operatingMode)
+    let maxDepth = get_dict_max_depth(subnetMap, 0);
+    addRowTree(subnetMap, 0, maxDepth, operatingMode);
 }
 
 function addRowTree(subnetTree, depth, maxDepth,operatingMode) {
@@ -239,7 +237,9 @@ function addRowTree(subnetTree, depth, maxDepth,operatingMode) {
             } else if (maxDepth > 20) {
                 notesWidth = '10%';
             }
-            addRow(subnet_split[0], parseInt(subnet_split[1]), (infoColumnCount + maxDepth - depth), (subnetTree[mapKey]['_note'] || ''), notesWidth, (subnetTree[mapKey]['_color'] || ''),operatingMode)
+            let note = subnetTree[mapKey]['_note'] || '';
+            let color = subnetTree[mapKey]['_color'] || '';
+            addRow(subnet_split[0], parseInt(subnet_split[1]), (infoColumnCount + maxDepth - depth), note, notesWidth, color, operatingMode);
         }
     }
 }
@@ -903,4 +903,67 @@ document.addEventListener('DOMContentLoaded', function() {
     if (exportExcelBtn) {
         exportExcelBtn.addEventListener('click', exportToExcel);
     }
+});
+
+
+// Add this to the existing JavaScript code
+
+// Define subnet templates
+const subnetTemplates = {
+    'azure-hub-spoke': {
+        network: '10.0.0.0',
+        netsize: '16',
+        subnets: {
+            '10.0.0.0/16': {
+                '10.0.0.0/24': { '_note': 'AzureFirewallSubnet' },
+                '10.0.1.0/24': { '_note': 'GatewaySubnet' },
+                '10.0.2.0/24': { '_note': 'AzureBastionSubnet' },
+                '10.0.3.0/24': { '_note': 'SharedServices' },
+                '10.0.4.0/22': { '_note': 'Reserved for future use' }
+            }
+        }
+    },
+    'azure-landing-zone': {
+        network: '10.1.0.0',
+        netsize: '16',
+        subnets: {
+            '10.1.0.0/16': {
+                '10.1.0.0/22': { '_note': 'Workload Subnet 1' },
+                '10.1.4.0/22': { '_note': 'Workload Subnet 2' },
+                '10.1.8.0/22': { '_note': 'Workload Subnet 3' },
+                '10.1.12.0/22': { '_note': 'Reserved for future use' }
+            }
+        }
+    },
+    'azure-identity': {
+        network: '10.2.0.0',
+        netsize: '16',
+        subnets: {
+            '10.2.0.0/16': {
+                '10.2.0.0/24': { '_note': 'Identity Services' },
+                '10.2.1.0/24': { '_note': 'AD DS Subnet' },
+                '10.2.2.0/24': { '_note': 'AD FS Subnet' },
+                '10.2.3.0/24': { '_note': 'Reserved for future use' }
+            }
+        }
+    }
+};
+
+// Function to apply a template
+function applyTemplate(templateName) {
+    const template = subnetTemplates[templateName];
+    if (template) {
+        $('#network').val(template.network);
+        $('#netsize').val(template.netsize);
+        subnetMap = template.subnets;
+        maxNetSize = parseInt(template.netsize);
+        renderTable(operatingMode);
+    }
+}
+
+// Event listener for template selection
+$('.dropdown-item[data-template]').on('click', function(e) {
+    e.preventDefault();
+    const templateName = $(this).data('template');
+    applyTemplate(templateName);
 });
