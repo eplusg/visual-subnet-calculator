@@ -256,20 +256,11 @@
 }
 
 #color_palette div[id^='palette_picker_'].selected {
-    border: 2px solid #000;
+    border: 1px dashed #000;
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
 #calcbody tr:hover {
-    outline: 2px dashed #000;
+    outline: 1px dashed #000;
     cursor: pointer;
-}
-
-.color-active #calcbody tr:hover {
-    outline: 2px solid #000;
-}
-
-#color_palette div[id^='palette_picker_'].selected {
-    border: 2px solid #000;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
