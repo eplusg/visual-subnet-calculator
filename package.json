@@ -1,0 +1,16 @@
+{
+  "name": "visual-subnet-calculator",
+  "version": "1.0.0",
+  "description": "This is a fork of https://github.com/ckabalan/visualsubnetcalc with some modifications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/analytics": "^1.3.1",
+    "parcel": "^2.12.0"
+  }
+}
